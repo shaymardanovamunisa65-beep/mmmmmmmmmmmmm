@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>GPA — TATU AKT</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════
+   TOKENS
+════════════════════════════════════════ */
+:root{
+  --navy:#0f2460;
+  --blue:#1d40b0;
+  --sky:#4e7cff;
+  --teal:#00bfa5;
+  --teal2:#009e87;
+  --bg:#f0f3fa;
+  --surface:#fff;
+  --border:#e3e8f5;
+  --text:#0d1b3e;
+  --sub:#7a8aaa;
+  --red:#e53935;
+  --amber:#f59f00;
+  --radius:18px;
+  --shadow:0 4px 24px rgba(15,36,96,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased;}
+.app{max-width:430px;margin:0 auto;padding-bottom:48px;}
+
+/* ════════════════════════════════════════
+   HEADER
+════════════════════════════════════════ */
+.hdr{
+  background:var(--navy);
+  padding:24px 20px 0;
+  position:relative;overflow:hidden;
+}
+.hdr-blob{
+  position:absolute;border-radius:50%;pointer-events:none;
+}
+.hb1{width:260px;height:260px;
+  background:radial-gradient(circle,rgba(0,191,165,.22) 0%,transparent 70%);
+  top:-120px;right:-60px;}
+.hb2{width:180px;height:180px;
+  background:radial-gradient(circle,rgba(78,124,255,.18) 0%,transparent 70%);
+  bottom:-60px;left:-30px;}
+.hdr-inner{position:relative;z-index:1;}
+.hdr-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:100px;padding:5px 12px 5px 8px;
+  font-size:10.5px;font-weight:600;
+  color:rgba(255,255,255,.8);letter-spacing:.3px;
+  margin-bottom:16px;
+}
+.hdr-pill-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--teal);box-shadow:0 0 6px var(--teal);
+}
+.hdr-title{
+  font-size:44px;font-weight:900;color:#fff;
+  line-height:1;letter-spacing:-1.5px;
+  margin-bottom:4px;
+}
+.hdr-title span{color:var(--teal);}
+.hdr-desc{
+  font-size:12px;color:rgba(255,255,255,.5);
+  margin-bottom:20px;font-weight:500;letter-spacing:.2px;
+}
+
+/* PROGRESS NAV */
+.prog{
+  display:flex;align-items:stretch;
+  margin:0 -20px;padding:0 20px;
+  background:rgba(255,255,255,.05);
+  border-top:1px solid rgba(255,255,255,.08);
+}
+.prog-step{
+  flex:1;padding:11px 4px;text-align:center;
+  font-size:10px;font-weight:700;
+  color:rgba(255,255,255,.25);
+  border-bottom:2px solid transparent;
+  transition:color .2s,border-color .2s;
+  letter-spacing:.2px;
+}
+.prog-step.active{color:var(--teal);border-bottom-color:var(--teal);}
+.prog-step.done{color:rgba(255,255,255,.5);}
+
+/* ════════════════════════════════════════
+   SCREENS
+════════════════════════════════════════ */
+.wrap{padding:16px;}
+.screen{display:none;}
+.screen.on{display:block;animation:up .2s ease;}
+#s5.on{display:flex;flex-direction:column;}
+@keyframes up{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* ════════════════════════════════════════
+   CARD
+════════════════════════════════════════ */
+.card{
+  background:var(--surface);
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+  padding:18px;
+  margin-bottom:12px;
+}
+.card-label{
+  font-size:11px;font-weight:700;
+  color:var(--sub);letter-spacing:.6px;
+  text-transform:uppercase;margin-bottom:12px;
+}
+
+/* ════════════════════════════════════════
+   S1 — HOME
+════════════════════════════════════════ */
+
+/* Baho shkala */
+.shkala{display:flex;gap:6px;margin-bottom:14px;}
+.sh{
+  flex:1;border-radius:14px;
+  padding:10px 4px 8px;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+}
+.sh-5{background:#e3fff8;border:1.5px solid #8de8d4;}
+.sh-4{background:#eaedff;border:1.5px solid #b3c0f5;}
+.sh-3{background:#fff9e6;border:1.5px solid #f0d472;}
+.sh-2{background:#fff0f0;border:1.5px solid #f5b0b0;}
+.sh-1b{background:#fff0f0;border:1.5px solid #f5b0b0;}
+.sh-n{font-size:18px;font-weight:900;color:var(--text);}
+.sh-l{font-size:8px;font-weight:700;color:var(--sub);}
+
+/* Kurs kartalar */
+.kgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.kcard{
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  border-radius:var(--radius);
+  padding:18px 10px 14px;
+  text-align:center;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;
+  transition:transform .15s,border-color .15s,box-shadow .15s;
+  box-shadow:0 2px 12px rgba(15,36,96,.05);
+}
+.kcard:active{transform:scale(.94);border-color:var(--sky);}
+.kcard-num{
+  font-size:46px;font-weight:900;line-height:1;
+  background:linear-gradient(135deg,var(--navy),var(--sky));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.kcard-txt{font-size:13px;font-weight:700;color:var(--text);margin-top:1px;}
+.kcard-sub{
+  font-size:10px;font-weight:600;color:var(--sub);
+  margin-top:6px;
+  background:var(--bg);border-radius:6px;
+  padding:3px 7px;
+}
+
+/* Boshqa fanlar */
+.bq{
+  display:flex;align-items:center;gap:12px;
+  background:linear-gradient(135deg,#f5f7ff,#edf0ff);
+  border:1.5px solid #d0d9f8;
+  border-radius:var(--radius);
+  padding:14px;cursor:pointer;
+  transition:transform .15s,border-color .15s;
+}
+.bq:active{transform:scale(.98);border-color:var(--sky);}
+.bq-ico{
+  width:42px;height:42px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--navy),var(--blue));
+  border-radius:13px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;color:#fff;font-weight:900;
+}
+.bq-t{font-size:13.5px;font-weight:800;color:var(--navy);}
+.bq-s{font-size:11px;color:var(--sub);margin-top:2px;}
+.bq-arr{margin-left:auto;font-size:22px;color:#c0ccec;flex-shrink:0;}
+
+/* ════════════════════════════════════════
+   S3 — FAN BAHOLASH
+════════════════════════════════════════ */
+.sem-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  background:linear-gradient(135deg,#edf0ff,#e4e9ff);
+  border:1px solid #c8d2f8;
+  border-radius:100px;padding:5px 12px;
+  font-size:10.5px;font-weight:700;color:var(--blue);
+  margin:12px 0 10px;letter-spacing:.2px;
+}
+.frow{
+  background:var(--bg);
+  border:1.5px solid var(--border);
+  border-radius:14px;
+  padding:12px;margin-bottom:8px;
+  transition:border-color .15s,background .15s;
+}
+.frow.warn{border-color:var(--red);background:#fff4f4;}
+.fname{
+  font-size:12.5px;font-weight:700;color:var(--text);
+  margin-bottom:10px;line-height:1.4;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:6px;
+}
+.fkredit{
+  flex-shrink:0;font-size:10px;font-weight:700;
+  color:var(--blue);background:#edf0ff;
+  border-radius:6px;padding:2px 7px;margin-top:1px;
+}
+.ballrow{display:flex;gap:5px;}
+.bb{
+  flex:1;padding:9px 2px;
+  border:1.5px solid var(--border);
+  border-radius:10px;background:#fff;
+  font-family:inherit;font-size:15px;font-weight:900;
+  color:var(--text);cursor:pointer;
+  text-align:center;transition:all .12s;
+}
+.bb:active{transform:scale(.9);}
+.bb.a5{background:#00bfa5;border-color:#00bfa5;color:#fff;}
+.bb.a4{background:#1d40b0;border-color:#1d40b0;color:#fff;}
+.bb.a3{background:#f59f00;border-color:#f59f00;color:#fff;}
+.bb.a2,.bb.a1{background:#e53935;border-color:#e53935;color:#fff;}
+.blbl-row{display:flex;gap:5px;margin-top:3px;}
+.blbl{flex:1;text-align:center;font-size:8px;font-weight:700;color:var(--sub);}
+
+/* ════════════════════════════════════════
+   BUTTONS
+════════════════════════════════════════ */
+.btn{
+  width:100%;padding:15px;border:none;
+  border-radius:var(--radius);
+  font-family:inherit;font-size:15px;font-weight:800;
+  cursor:pointer;margin-bottom:8px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:transform .12s,opacity .12s;
+}
+.btn:active{transform:scale(.97);opacity:.9;}
+.btn-teal{
+  background:linear-gradient(135deg,var(--teal),var(--teal2));
+  color:#fff;box-shadow:0 6px 20px rgba(0,191,165,.25);
+}
+.btn-navy{
+  background:linear-gradient(135deg,var(--navy),var(--blue));
+  color:#fff;box-shadow:0 6px 20px rgba(15,36,96,.2);
+}
+.btn-ghost{
+  background:var(--surface);color:var(--navy);
+  border:1.5px solid var(--border);
+}
+
+/* ════════════════════════════════════════
+   XATO
+════════════════════════════════════════ */
+.xato{
+  display:none;
+  background:#fff0f0;border:1px solid #fcc;
+  border-radius:12px;padding:10px 14px;
+  font-size:12px;font-weight:700;color:var(--red);
+  margin-bottom:10px;
+}
+
+/* ════════════════════════════════════════
+   S4 / S6 — NATIJA
+════════════════════════════════════════ */
+.result-hero{
+  border-radius:24px;padding:32px 20px 28px;
+  text-align:center;margin-bottom:12px;
+  position:relative;overflow:hidden;
+}
+.rh-bg{position:absolute;inset:0;}
+.rh-inner{position:relative;z-index:1;}
+.rh-ring{
+  width:100px;height:100px;border-radius:50%;
+  border:2.5px solid rgba(255,255,255,.25);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 14px;
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(4px);
+}
+.rh-ring-n{font-size:42px;font-weight:900;color:#fff;letter-spacing:-1px;}
+.rh-gpa{font-size:58px;font-weight:900;color:#fff;line-height:1;letter-spacing:-2px;}
+.rh-lbl{font-size:16px;font-weight:800;color:rgba(255,255,255,.9);margin-top:8px;}
+.rh-sub{font-size:11.5px;color:rgba(255,255,255,.55);margin-top:5px;font-weight:500;}
+
+/* Status banner */
+.status{
+  border-radius:16px;padding:14px 16px;
+  margin-bottom:12px;font-size:13px;font-weight:700;line-height:1.6;
+}
+.st-ok{background:linear-gradient(135deg,#e0fff8,#c5f5e8);
+  border:1.5px solid #6dd9be;color:#003d2c;}
+.st-fail{background:linear-gradient(135deg,#fff0f0,#ffd8d8);
+  border:1.5px solid #f5a0a0;color:#7a0000;}
+
+/* Hisob jadval */
+.formula-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:#f0f3ff;border:1px solid #d8dff8;
+  border-radius:10px;padding:6px 13px;
+  font-size:12px;font-weight:700;color:var(--navy);
+  margin-bottom:14px;
+}
+.fnat{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 0;border-bottom:1px solid #f0f2f8;
+}
+.fnat:last-child{border:none;}
+.fnat-l{flex:1;padding-right:8px;}
+.fnat-name{font-size:12px;font-weight:700;color:var(--text);line-height:1.4;}
+.fnat-sub{font-size:10px;color:var(--sub);margin-top:2px;}
+.fnat-r{text-align:right;flex-shrink:0;}
+.fnat-b{font-size:16px;font-weight:900;}
+.fnat-l2{font-size:10px;font-weight:700;margin-top:1px;}
+
+.warn-block{
+  background:#fff5f5;border:1.5px solid #f5b0b0;
+  border-radius:16px;padding:14px;margin-bottom:12px;
+}
+.warn-title{font-size:12px;font-weight:800;color:var(--red);margin-bottom:8px;}
+.warn-row{font-size:11px;font-weight:600;color:#a00;padding:2px 0;}
+.warn-note{font-size:11px;color:#b00;margin-top:6px;}
+
+.tip{
+  background:linear-gradient(135deg,#f0f5ff,#e8f0ff);
+  border:1px solid #ccd8f8;border-radius:14px;
+  padding:13px 16px;font-size:13px;font-weight:700;
+  color:var(--navy);text-align:center;
+}
+
+/* ════════════════════════════════════════
+   S5 — BOSHQA FANLAR
+════════════════════════════════════════ */
+.bfi{
+  background:linear-gradient(135deg,#f0f8ff,#e8f3fd);
+  border:1px solid #c0d8f0;border-radius:14px;
+  padding:14px;margin-bottom:16px;
+  font-size:12px;line-height:1.85;color:var(--text);
+}
+.bf-row{display:flex;gap:8px;align-items:flex-end;margin-bottom:8px;}
+.bf-f{flex:1;}
+.bf-lbl{
+  font-size:10px;font-weight:800;color:var(--sub);
+  margin-bottom:5px;letter-spacing:.4px;
+}
+.bf-inp{
+  width:100%;padding:12px 8px;
+  border:1.5px solid var(--border);
+  border-radius:12px;font-family:inherit;
+  font-size:17px;font-weight:800;color:var(--text);
+  text-align:center;background:#fff;
+  transition:border-color .18s;
+}
+.bf-inp:focus{outline:none;border-color:var(--sky);}
+.bf-del{
+  width:42px;height:46px;flex-shrink:0;
+  background:#fff0f0;border:1.5px solid #fcc;
+  border-radius:12px;color:var(--red);
+  font-size:15px;cursor:pointer;
+  transition:background .12s;
+}
+.bf-del:active{background:#ffe0e0;}
+.add-btn{
+  width:100%;background:none;
+  border:1.5px dashed #b8c4e0;
+  border-radius:14px;padding:12px;
+  color:var(--blue);font-family:inherit;
+  font-size:13px;font-weight:700;cursor:pointer;
+  transition:all .15s;margin-top:4px;
+}
+.add-btn:active{background:#f0f4ff;}
+
+/* ════════════════════════════════════════
+   DIVIDER
+════════════════════════════════════════ */
+.divider{height:1px;background:var(--border);margin:4px 0 12px;}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ── HEADER ───────────────────────────────────────── -->
+<div class="hdr">
+  <div class="hdr-blob hb1"></div>
+  <div class="hdr-blob hb2"></div>
+  <div class="hdr-inner">
+    <div class="hdr-pill">
+      <span class="hdr-pill-dot"></span>
+      TATU · AKT · 5 ballik tizim
+    </div>
+    <div class="hdr-title" style="text-align:center;">GPA<br><span id='hdr-sub'>Kalkulyator</span></div>
+    <div class="hdr-desc">Σ(Kredit × Baho) ÷ Σ(Kredit)</div>
+  </div>
+  <div class="prog">
+    <div class="prog-step active" id="st1">① Kurs</div>
+    <div class="prog-step" id="st2">② Ballar</div>
+    <div class="prog-step" id="st3">③ Natija</div>
+  </div>
+</div>
+
+<!-- ── WRAP ─────────────────────────────────────────── -->
+<div class="wrap">
+
+<!-- ════════════════ S1: BOSH SAHIFA ════════════════ -->
+<div class="screen on" id="s1">
+
+  <!-- Baho shkala -->
+  <div class="shkala" style="margin-top:4px;">
+    <div class="sh sh-5"><span class="sh-n">5</span><span class="sh-l" id="g5lbl">A'lo</span></div>
+    <div class="sh sh-4"><span class="sh-n">4</span><span class="sh-l" id="g4lbl">Yaxshi</span></div>
+    <div class="sh sh-3"><span class="sh-n">3</span><span class="sh-l" id="g3lbl">Qoniq.</span></div>
+    <div class="sh sh-2"><span class="sh-n">2</span><span class="sh-l">→ 0</span></div>
+    <div class="sh sh-1b"><span class="sh-n">1</span><span class="sh-l">→ 0</span></div>
+  </div>
+
+  <!-- Kurs kartalar -->
+  <div class="card" style="padding:16px;">
+    <div style="margin-bottom:14px;">
+      <div style="font-size:15px;font-weight:800;color:var(--navy);" id="selectCourseTitle">Kursni tanlang</div>
+      <div style="font-size:11px;color:var(--sub);margin-top:3px;font-weight:500;" id="courseDescEl">AKT sohasida kasb ta'limi fanlari</div>
+    </div>
+    <div class="kgrid">
+      <button class="kcard" onclick="kursT('k1')">
+        <div class="kcard-num">1</div>
+        <div class="kcard-txt" data-word="kurs">kurs</div>
+        <div class="kcard-sub" id="k1sub">14 fan · 64 kr</div>
+      </button>
+      <button class="kcard" onclick="kursT('k2')">
+        <div class="kcard-num">2</div>
+        <div class="kcard-txt" data-word="kurs">kurs</div>
+        <div class="kcard-sub" id="k2sub">10 fan · 60 kr</div>
+      </button>
+      <button class="kcard" onclick="kursT('k3')">
+        <div class="kcard-num">3</div>
+        <div class="kcard-txt" data-word="kurs">kurs</div>
+        <div class="kcard-sub" id="k3sub">13 fan · 58 kr</div>
+      </button>
+      <button class="kcard" onclick="kursT('k4')">
+        <div class="kcard-num">4</div>
+        <div class="kcard-txt" data-word="kurs">kurs</div>
+        <div class="kcard-sub" id="k4sub">9 fan · 54 kr</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Boshqa fanlar -->
+  <button class="bq" onclick="boshqaFanlar()">
+    <div class="bq-ico">＋</div>
+    <div>
+      <div class="bq-t" id="otherGpaTitle">Boshqa fanlar GPA</div>
+      <div class="bq-s" id="otherGpaDesc">Kredit va baho asosida erkin hisoblash</div>
+    </div>
+    <span class="bq-arr">›</span>
+  </button>
+
+</div>
+
+<!-- ════════════════ S2: PLACEHOLDER ════════════════ -->
+<div class="screen" id="s2"></div>
+
+<!-- ════════════════ S3: FANLAR ════════════════ -->
+<div class="screen" id="s3">
+  <div class="card">
+    <div class="card-label" id="s3title">Fanlar</div>
+    <div id="fanList"></div>
+  </div>
+  <div class="xato" id="xatoMsg"></div>
+  <button class="btn btn-teal" onclick="hisoblash()" id="calcBtn1">🧮 GPA ni hisoblash</button>
+  <button class="btn btn-ghost" onclick="goS1()" id="backBtn1">← Orqaga</button>
+</div>
+
+<!-- ════════════════ S4: NATIJA ════════════════ -->
+<div class="screen" id="s4">
+  <div id="natijaCont"></div>
+  <button class="btn btn-navy" onclick="goS1()" id="recalcBtn1">🔄 Qayta hisoblash</button>
+</div>
+
+<!-- ════════════════ S5: BOSHQA FANLAR ════════════════ -->
+<div class="screen" id="s5" style="min-height:calc(100vh - 160px);">
+  <div class="card">
+    <div class="card-label" id="otherSubjTitle">Boshqa fanlar</div>
+    <div class="bfi">
+      📌 Fan nomisiz — faqat <b>kredit</b> va <b>baho</b> kiriting.<br id="otherInfoEl">
+      <span id="gradeScaleEl">🟢 <b>5</b> A'lo &nbsp;·&nbsp; 🔵 <b>4</b> Yaxshi &nbsp;·&nbsp; 🟡 <b>3</b> Qoniqarli &nbsp;·&nbsp; 🔴 <b>2/1</b> → 0</span>
+    </div>
+    <div id="boshqaRows"></div>
+    <button class="add-btn" onclick="boshqaQosh()" id="addSubjBtn">＋ Fan qo'shish</button>
+  </div>
+  <div id="boshqaXato" class="xato"></div>
+  <button class="btn btn-teal" onclick="boshqaHisoblash()" id="calcBtn2">🧮 GPA ni hisoblash</button>
+  <button class="btn btn-ghost" onclick="goS1()" id="backBtn2">← Orqaga</button>
+</div>
+
+<!-- ════════════════ S6: BOSHQA NATIJA ════════════════ -->
+<div class="screen" id="s6">
+  <div id="boshqaNatijaCont"></div>
+  <button class="btn btn-navy" onclick="boshqaFanlar()" id="recalcBtn2">🔄 Qayta hisoblash</button>
+  <button class="btn btn-ghost" onclick="goS1()" id="homeBtn2">🏠 Bosh sahifa</button>
+</div>
+
+</div><!-- /wrap -->
+</div><!-- /app -->
+
+<script>
+if(window.Telegram&&Telegram.WebApp)Telegram.WebApp.ready();
+
+// Til tizimi
+const LANG = (()=>{
+  // Birinchi URL parametrdan olish (bot tilidan)
+  const urlParams=new URLSearchParams(window.location.search);
+  const urlLang=urlParams.get('lang');
+  if(urlLang==='ru'||urlLang==='en'||urlLang==='uz') return urlLang;
+  // Keyin Telegram WebApp tilidan
+  try{
+    const ul=Telegram.WebApp.initDataUnsafe?.user?.language_code||'uz';
+    if(ul==='ru') return 'ru';
+    if(ul==='en') return 'en';
+    return 'uz';
+  }catch(e){ return 'uz'; }
+})();
+
+const T={
+  uz:{
+    title:'GPA\nKalkulyator',
+    step1:'① Kurs', step2:'② Ballar', step3:'③ Natija',
+    selectCourse:'Kursni tanlang',
+    courseDesc:'AKT sohasida kasb ta\'limi fanlari',
+    courseWord:'kurs',
+    otherGpa:'Boshqa fanlar GPA',
+    otherDesc:'Kredit va baho asosida erkin hisoblash',
+    subjects:'Fanlar',
+    calculate:'🧮 GPA ni hisoblash',
+    back:'← Orqaga',
+    recalc:'🔄 Qayta hisoblash',
+    home:'🏠 Bosh sahifa',
+    otherSubjects:'Boshqa fanlar',
+    otherInfo:'📌 Fan nomisiz — faqat <b>kredit</b> va <b>baho</b> kiriting.',
+    addSubject:'＋ Fan qo\'shish',
+    gradeScale:'🟢 <b>5</b> A\'lo &nbsp;·&nbsp; 🔵 <b>4</b> Yaxshi &nbsp;·&nbsp; 🟡 <b>3</b> Qoniqarli &nbsp;·&nbsp; 🔴 <b>2/1</b> → 0',
+    grade5:'A\'lo', grade4:'Yaxshi', grade3:'Qoniq.', grade2:'→ 0', grade1:'→ 0',
+    errNoBaho:'⚠️ Baho tanlanmagan: ',
+    errMin1:'⚠️ Kamida 1 ta fan kiriting!',
+    errCredit:'⚠️ Kredit 1–16 orasida bo\'lishi kerak!',
+    errGrade:'⚠️ Baho 1–5 orasida bo\'lishi kerak!',
+    errFill:'⚠️ Fanlarni to\'liq kiriting!',
+    gpaLblExc:"A'lo 🏆", gpaLblGood:'Yaxshi 👍', gpaLblSat:'Qoniqarli ⚡', gpaLblFail:'Qoniqarsiz ⚠️',
+    gpaTipExc:'', gpaTipGood:"A'loga ko'tarilish uchun davom eting!", gpaTipSat:'Bahoingizni oshirishga harakat qiling!', gpaTipFail:'GPA 2.0 dan past. Ko\'pchilik fanlarni qayta topshirish kerak!',
+    gpaStatusExc:g=>`🎉 GPA ${g} — Keyingi kursga o'tish tasdiqlandi! Zo'r!`,
+    gpaStatusGood:g=>`✅ GPA ${g} — Keyingi kursga o'tish tasdiqlandi!`,
+    gpaStatusSat:g=>`✅ GPA ${g} — Keyingi kursga o'tish imkoniyati bor.`,
+    gpaStatusFail:g=>`❌ GPA ${g} — 2.6 dan past. Kamida 2.6 kerak!`,
+    subjectN:i=>`${i}-fan`, creditLbl:'kredit', gradeLbl:'baho',
+  },
+  ru:{
+    title:'Калькулятор\nGPA',
+    step1:'① Курс', step2:'② Оценки', step3:'③ Результат',
+    selectCourse:'Выберите курс',
+    courseDesc:'Дисциплины профессионального образования ИКТ',
+    courseWord:'курс',
+    otherGpa:'GPA по другим дисциплинам',
+    otherDesc:'Свободный расчёт по кредитам и оценкам',
+    subjects:'Дисциплины',
+    calculate:'🧮 Рассчитать GPA',
+    back:'← Назад',
+    recalc:'🔄 Пересчитать',
+    home:'🏠 Главная',
+    otherSubjects:'Другие дисциплины',
+    otherInfo:'📌 Без названия — введите только <b>кредиты</b> и <b>оценки</b>.',
+    addSubject:'＋ Добавить дисциплину',
+    gradeScale:'🟢 <b>5</b> Отл. &nbsp;·&nbsp; 🔵 <b>4</b> Хор. &nbsp;·&nbsp; 🟡 <b>3</b> Удовл. &nbsp;·&nbsp; 🔴 <b>2/1</b> → 0',
+    grade5:'Отл.', grade4:'Хор.', grade3:'Удовл.', grade2:'→ 0', grade1:'→ 0',
+    errNoBaho:'⚠️ Не выбрана оценка: ',
+    errMin1:'⚠️ Введите хотя бы 1 дисциплину!',
+    errCredit:'⚠️ Кредиты должны быть от 1 до 16!',
+    errGrade:'⚠️ Оценка должна быть от 1 до 5!',
+    errFill:'⚠️ Заполните все поля!',
+    gpaLblExc:'Отлично 🏆', gpaLblGood:'Хорошо 👍', gpaLblSat:'Удовлетворительно ⚡', gpaLblFail:'Неудовлетворительно ⚠️',
+    gpaTipExc:'', gpaTipGood:'Продолжайте — до отличного совсем немного!', gpaTipSat:'Старайтесь повысить оценки!', gpaTipFail:'GPA ниже 2.0. Необходимо пересдать большинство предметов!',
+    gpaStatusExc:g=>`🎉 GPA ${g} — Переход на следующий курс подтверждён! Отлично!`,
+    gpaStatusGood:g=>`✅ GPA ${g} — Переход на следующий курс подтверждён!`,
+    gpaStatusSat:g=>`✅ GPA ${g} — Есть возможность перейти на следующий курс.`,
+    gpaStatusFail:g=>`❌ GPA ${g} — Ниже 2.6. Требуется минимум 2.6!`,
+    subjectN:i=>`Предм. ${i}`, creditLbl:'кредит', gradeLbl:'оценка',
+  },
+  en:{
+    title:'GPA\nCalculator',
+    step1:'① Year', step2:'② Grades', step3:'③ Result',
+    selectCourse:'Select your year',
+    courseDesc:'ICT vocational education courses',
+    courseWord:'year',
+    otherGpa:'Custom GPA Calculator',
+    otherDesc:'Free calculation by credits and grades',
+    subjects:'Courses',
+    calculate:'🧮 Calculate GPA',
+    back:'← Back',
+    recalc:'🔄 Recalculate',
+    home:'🏠 Home',
+    otherSubjects:'Other courses',
+    otherInfo:'📌 No name needed — enter only <b>credits</b> and <b>grades</b>.',
+    addSubject:'＋ Add course',
+    gradeScale:'🟢 <b>5</b> Exc. &nbsp;·&nbsp; 🔵 <b>4</b> Good &nbsp;·&nbsp; 🟡 <b>3</b> Sat. &nbsp;·&nbsp; 🔴 <b>2/1</b> → 0',
+    grade5:'Exc.', grade4:'Good', grade3:'Sat.', grade2:'→ 0', grade1:'→ 0',
+    errNoBaho:'⚠️ Grade not selected: ',
+    errMin1:'⚠️ Enter at least 1 course!',
+    errCredit:'⚠️ Credits must be between 1 and 16!',
+    errGrade:'⚠️ Grade must be between 1 and 5!',
+    errFill:'⚠️ Please fill in all fields!',
+    gpaLblExc:'Excellent 🏆', gpaLblGood:'Good 👍', gpaLblSat:'Satisfactory ⚡', gpaLblFail:'Unsatisfactory ⚠️',
+    gpaTipExc:'', gpaTipGood:'Keep going — you\'re close to excellent!', gpaTipSat:'Try to improve your grades!', gpaTipFail:'GPA below 2.0. Most courses need to be retaken!',
+    gpaStatusExc:g=>`🎉 GPA ${g} — Next year progression confirmed! Excellent!`,
+    gpaStatusGood:g=>`✅ GPA ${g} — Next year progression confirmed!`,
+    gpaStatusSat:g=>`✅ GPA ${g} — Eligible to progress to next year.`,
+    gpaStatusFail:g=>`❌ GPA ${g} — Below 2.6. Minimum 2.6 required!`,
+    subjectN:i=>`Course ${i}`, creditLbl:'credits', gradeLbl:'grade',
+  }
+};
+const t=T[LANG];
+
+// Til asosida HTML ni yangilash
+function applyLang(){
+  const t=T[LANG]||T.uz;
+  document.getElementById('st1').textContent=t.step1;
+  document.getElementById('st2').textContent=t.step2;
+  document.getElementById('st3').textContent=t.step3;
+  if(document.getElementById('hdr-sub')) document.getElementById('hdr-sub').textContent=LANG==='ru'?'Калькулятор':LANG==='en'?'Calculator':'Kalkulyator';
+  const el=id=>document.getElementById(id);
+  if(el('selectCourseTitle')) el('selectCourseTitle').textContent=t.selectCourse;
+  if(el('courseDescEl')) el('courseDescEl').textContent=t.courseDesc;
+  document.querySelectorAll('[data-word="kurs"]').forEach(e=>e.textContent=t.courseWord);
+  if(el('otherGpaTitle')) el('otherGpaTitle').textContent=t.otherGpa;
+  if(el('otherGpaDesc')) el('otherGpaDesc').textContent=t.otherDesc;
+  if(el('g5lbl')) el('g5lbl').textContent=t.grade5;
+  if(el('g4lbl')) el('g4lbl').textContent=t.grade4;
+  if(el('g3lbl')) el('g3lbl').textContent=t.grade3;
+  if(el('calcBtn1')) el('calcBtn1').textContent=t.calculate;
+  if(el('backBtn1')) el('backBtn1').textContent=t.back;
+  if(el('recalcBtn1')) el('recalcBtn1').textContent=t.recalc;
+  if(el('otherSubjTitle')) el('otherSubjTitle').textContent=t.otherSubjects;
+  if(el('gradeScaleEl')) el('gradeScaleEl').innerHTML=t.gradeScale;
+  if(el('addSubjBtn')) el('addSubjBtn').textContent=t.addSubject;
+  if(el('calcBtn2')) el('calcBtn2').textContent=t.calculate;
+  if(el('backBtn2')) el('backBtn2').textContent=t.back;
+  if(el('recalcBtn2')) el('recalcBtn2').textContent=t.recalc;
+  if(el('homeBtn2')) el('homeBtn2').textContent=t.home;
+  // Kurs sub-textlarini tarjima
+  const subMap={
+    k1sub:LANG==='ru'?'14 дисц. · 64 кр':LANG==='en'?'14 courses · 64 cr':'14 fan · 64 kr',
+    k2sub:LANG==='ru'?'10 дисц. · 60 кр':LANG==='en'?'10 courses · 60 cr':'10 fan · 60 kr',
+    k3sub:LANG==='ru'?'13 дисц. · 58 кр':LANG==='en'?'13 courses · 58 cr':'13 fan · 58 kr',
+    k4sub:LANG==='ru'?'9 дисц. · 54 кр':LANG==='en'?'9 courses · 54 cr':'9 fan · 54 kr',
+  };
+  Object.entries(subMap).forEach(([id,txt])=>{if(el(id))el(id).textContent=txt;});
+}
+
+/* ── DATA ───────────────────────────── */
+const DATA={
+  k1:{
+    uz:{nom:'1-kurs'},ru:{nom:'1-й курс'},en:{nom:'Year 1'},
+    s:{
+    s1:{uz:{nom:'1-semestr'},ru:{nom:'1-й семестр'},en:{nom:'Semester 1'},f:[
+      {uz:'Gumanitar fan tanlovi',ru:'Гуманитарные науки (выбор)',en:'Humanities (elective)',k:4},
+      {uz:'Akademik yozuv 1',ru:'Академическое письмо 1',en:'Academic Writing 1',k:2},
+      {uz:'Xorijiy til 1',ru:'Иностранный язык 1',en:'Foreign Language 1',k:4},
+      {uz:'Hisob (Calculus)',ru:'Математический анализ',en:'Calculus',k:8},
+      {uz:'Fizika 1',ru:'Физика 1',en:'Physics 1',k:6},
+      {uz:'Dasturlash 1',ru:'Программирование 1',en:'Programming 1',k:6},
+      {uz:'Jismoniy tarbiya 1',ru:'Физическая культура 1',en:'Physical Education 1',k:2}
+    ]},
+    s2:{uz:{nom:'2-semestr'},ru:{nom:'2-й семестр'},en:{nom:'Semester 2'},f:[
+      {uz:'Gumanitar fan tanlovi',ru:'Гуманитарные науки (выбор)',en:'Humanities (elective)',k:4},
+      {uz:'Akademik yozuv 2',ru:'Академическое письмо 2',en:'Academic Writing 2',k:2},
+      {uz:'Xorijiy til 2',ru:'Иностранный язык 2',en:'Foreign Language 2',k:4},
+      {uz:'Differensial tenglamalar',ru:'Дифференциальные уравнения',en:'Differential Equations',k:4},
+      {uz:'Chiziqli algebra',ru:'Линейная алгебра',en:'Linear Algebra',k:4},
+      {uz:'Fizika 2',ru:'Физика 2',en:'Physics 2',k:6},
+      {uz:'Dasturlash 2',ru:'Программирование 2',en:'Programming 2',k:6},
+      {uz:'Jismoniy tarbiya 2',ru:'Физическая культура 2',en:'Physical Education 2',k:2}
+    ]}
+  }},
+  k2:{
+    uz:{nom:'2-kurs'},ru:{nom:'2-й курс'},en:{nom:'Year 2'},
+    s:{
+    s3:{uz:{nom:'3-semestr'},ru:{nom:'3-й семестр'},en:{nom:'Semester 3'},f:[
+      {uz:'Veb dasturlashga kirish',ru:'Введение в веб-разработку',en:'Intro to Web Development',k:6},
+      {uz:'Kiberxavfsizlik asoslari',ru:'Основы кибербезопасности',en:'Cybersecurity Fundamentals',k:6},
+      {uz:"Ma'lumotlar tuzilmasi va algoritmlar",ru:'Структуры данных и алгоритмы',en:'Data Structures & Algorithms',k:6},
+      {uz:'Elektronika va sxemalar 1',ru:'Электроника и схемотехника 1',en:'Electronics & Circuits 1',k:6},
+      {uz:'Diskrit tuzilmalar',ru:'Дискретные структуры',en:'Discrete Structures',k:6}
+    ]},
+    s4:{uz:{nom:'4-semestr'},ru:{nom:'4-й семестр'},en:{nom:'Semester 4'},f:[
+      {uz:'Kompyuterni tashkil etish',ru:'Организация компьютера',en:'Computer Organization',k:6},
+      {uz:"Ma'lumotlar bazasi",ru:'Базы данных',en:'Databases',k:6},
+      {uz:'Algoritmlarni loyixalash',ru:'Проектирование алгоритмов',en:'Algorithm Design',k:6},
+      {uz:"Ta'limga kirish",ru:'Введение в образование',en:'Introduction to Education',k:6},
+      {uz:'Extimollik va statistika',ru:'Теория вероятностей и статистика',en:'Probability & Statistics',k:6}
+    ]}
+  }},
+  k3:{
+    uz:{nom:'3-kurs'},ru:{nom:'3-й курс'},en:{nom:'Year 3'},
+    s:{
+    s5:{uz:{nom:'5-semestr'},ru:{nom:'5-й семестр'},en:{nom:'Semester 5'},f:[
+      {uz:'Kompyuter tarmoqlari',ru:'Компьютерные сети',en:'Computer Networks',k:6},
+      {uz:"Ta'lim nazariyasi",ru:'Теория обучения',en:'Theory of Education',k:6},
+      {uz:"Ta'lim psixologiyasi",ru:'Психология обучения',en:'Educational Psychology',k:6},
+      {uz:'LaTeX ga kirish',ru:'Введение в LaTeX',en:'Introduction to LaTeX',k:6},
+      {uz:'Ochiq tanlov fan',ru:'Дисциплина по выбору',en:'Elective course',k:4},
+      {uz:'Individual loyiha 1',ru:'Индивидуальный проект 1',en:'Individual Project 1',k:2}
+    ]},
+    s6:{uz:{nom:'6-semestr'},ru:{nom:'6-й семестр'},en:{nom:'Semester 6'},f:[
+      {uz:'Operasion tizimlar',ru:'Операционные системы',en:'Operating Systems',k:4},
+      {uz:"Ta'limda raqamli texnologiyalar",ru:'Цифровые технологии в обучении',en:'Digital Technologies in Education',k:6},
+      {uz:"O'quv reja, baho va baxolash",ru:'Учебный план, оценка и контроль',en:'Curriculum, Assessment & Grading',k:6},
+      {uz:'Mobil ilovalarini ishlab chiqish',ru:'Разработка мобильных приложений',en:'Mobile App Development',k:6},
+      {uz:'Ochiq tanlov fan',ru:'Дисциплина по выбору',en:'Elective course',k:4},
+      {uz:'Individual loyiha 2',ru:'Индивидуальный проект 2',en:'Individual Project 2',k:2},
+      {uz:'Ishlab chikarish amaliyoti',ru:'Производственная практика',en:'Industrial Internship',k:2}
+    ]}
+  }},
+  k4:{
+    uz:{nom:'4-kurs'},ru:{nom:'4-й курс'},en:{nom:'Year 4'},
+    s:{
+    s7:{uz:{nom:'7-semestr'},ru:{nom:'7-й семестр'},en:{nom:'Semester 7'},f:[
+      {uz:"Ilmiy ta'lim",ru:'Научное образование',en:'Research & Education',k:6},
+      {uz:'Mutaxassislik tanlov fan 1',ru:'Дисциплина по специальности 1',en:'Specialization Elective 1',k:6},
+      {uz:'Mutaxassislik tanlov fan 2',ru:'Дисциплина по специальности 2',en:'Specialization Elective 2',k:6},
+      {uz:'Mutaxassislik tanlov fan 3',ru:'Дисциплина по специальности 3',en:'Specialization Elective 3',k:6},
+      {uz:'Mutaxassislik tanlov fan 4',ru:'Дисциплина по специальности 4',en:'Specialization Elective 4',k:6}
+    ]},
+    s8:{uz:{nom:'8-semestr'},ru:{nom:'8-й семестр'},en:{nom:'Semester 8'},f:[
+      {uz:'Mutaxassislik tanlov fan 5',ru:'Дисциплина по специальности 5',en:'Specialization Elective 5',k:6},
+      {uz:'Mutaxassislik tanlov fan 6',ru:'Дисциплина по специальности 6',en:'Specialization Elective 6',k:6},
+      {uz:'Bitiruv malakaviy ishi',ru:'Выпускная квалификационная работа',en:'Graduation Thesis',k:16},
+      {uz:'Bitiruv mal. ishi oldi amal.',ru:'Преддипломная практика',en:'Pre-graduation Internship',k:2}
+    ]}
+  }}
+};
+
+/* ── STATE ──────────────────────────── */
+let sel={}, curK=null;
+
+/* ── NAVIGATION ─────────────────────── */
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>{
+    s.className='screen'+(s.id===id?' on':'');
+  });
+}
+function setStep(n){
+  [1,2,3].forEach(i=>{
+    const e=document.getElementById('st'+i);
+    if(!e)return;
+    e.className='prog-step'+(i<n?' done':i===n?' active':'');
+  });
+}
+function goS1(){show('s1');setStep(1);curK=null;sel={};}
+
+/* ── KURS ───────────────────────────── */
+function kursT(kid){
+  curK=kid; sel={};
+  const k=DATA[kid], ids=Object.keys(k.s);
+  const kNomL=k[LANG]?.nom||k.uz?.nom||k.nom||kid;
+  const s1NomL=k.s[ids[0]][LANG]?.nom||k.s[ids[0]].uz?.nom||k.s[ids[0]].nom||ids[0];
+  const s2NomL=k.s[ids[1]][LANG]?.nom||k.s[ids[1]].uz?.nom||k.s[ids[1]].nom||ids[1];
+  document.getElementById('s3title').textContent=t.subjects+' — '+kNomL+' — '+s1NomL+' + '+s2NomL;
+  let html='', idx=0;
+  html+=semTag(s1NomL);
+  k.s[ids[0]].f.forEach(f=>{html+=fanRowHtml(idx++,f);});
+  html+=semTag(s2NomL, true);
+  k.s[ids[1]].f.forEach(f=>{html+=fanRowHtml(idx++,f);});
+  document.getElementById('fanList').innerHTML=html;
+  document.getElementById('xatoMsg').style.display='none';
+  show('s3'); setStep(2); window.scrollTo(0,0);
+}
+
+function semTag(nom, gap){
+  return`<div class="sem-tag"${gap?' style="margin-top:16px;"':''}>📅 ${nom}</div>`;
+}
+
+function fanRowHtml(i, f){
+  const gl=LANG;
+  const bLbls={
+    5:gl==='ru'?'Отл.':gl==='en'?'Exc.':"A'lo",
+    4:gl==='ru'?'Хор.':gl==='en'?'Good':'Yaxshi',
+    3:gl==='ru'?'Удовл.':gl==='en'?'Sat.':'Qon.',
+    2:'→0', 1:'→0'
+  };
+  const btns=[[5],[4],[3],[2],[1]]
+    .map(([v])=>`<button class="bb" onclick="pickBall(${i},${v})" id="bb${i}_${v}">${v}</button>`).join('');
+  const lbls=[[5],[4],[3],[2],[1]]
+    .map(([v])=>`<div class="blbl">${bLbls[v]}</div>`).join('');
+  return`<div class="frow" id="fr${i}">
+    <div class="fname">
+      <span>${i+1}. ${f[LANG]||f.uz||f.n}</span>
+      <span class="fkredit">${f.k} kr</span>
+    </div>
+    <div class="ballrow">${btns}</div>
+    <div class="blbl-row">${lbls}</div>
+  </div>`;
+}
+
+function pickBall(i, v){
+  sel[i]=v;
+  // reset all in row
+  [5,4,3,2,1].forEach(n=>{
+    const b=document.getElementById(`bb${i}_${n}`);
+    if(b) b.className='bb';
+  });
+  document.getElementById(`bb${i}_${v}`).classList.add('a'+v);
+  const row=document.getElementById('fr'+i);
+  row.className='frow'+(v<=2?' warn':'');
+  document.getElementById('xatoMsg').style.display='none';
+}
+
+/* ── HISOBLASH ──────────────────────── */
+function hisoblash(){
+  const k=DATA[curK], ids=Object.keys(k.s);
+  const all=[...k.s[ids[0]].f, ...k.s[ids[1]].f];
+  const xEl=document.getElementById('xatoMsg');
+  const missing=all.filter((_,i)=>sel[i]===undefined);
+  if(missing.length){
+    xEl.innerHTML=t.errNoBaho+'<b>'+missing.map(f=>f[LANG]||f.uz||f.n).join(', ')+'</b>';
+    xEl.style.display='block'; return;
+  }
+  xEl.style.display='none';
+
+  let sumKB=0, sumK=0, rows=[], warns=[];
+  all.forEach((f,i)=>{
+    const b=sel[i], gb=b<=2?0:b;
+    sumK+=f.k; sumKB+=f.k*gb;
+    const lbl=b===5?(LANG==='ru'?'Отлично':LANG==='en'?'Excellent':"A'lo"):
+               b===4?(LANG==='ru'?'Хорошо':LANG==='en'?'Good':'Yaxshi'):
+               b===3?(LANG==='ru'?'Удовл.':LANG==='en'?'Satisfactory':'Qoniqarli'):
+               (LANG==='ru'?'Неудовл.':LANG==='en'?'Unsatisfactory':'Qoniqarsiz');
+    const col=b===5?'#00bfa5':b===4?'#1d40b0':b===3?'#f59f00':'#e53935';
+    const fn=f[LANG]||f.uz||f.n;
+    if(b<=2) warns.push({n:fn,b,k:f.k});
+    rows.push({n:fn,k:f.k,b,gb,lbl,col});
+  });
+
+  const gpa=sumKB/sumK;
+  renderNatija(gpa, sumK, sumKB, rows, warns, kNomL);
+  show('s4'); setStep(3); window.scrollTo(0,0);
+}
+
+function renderNatija(gpa, sumK, sumKB, rows, warns, kNom){
+  const cfg=getGpaCfg(gpa);
+  const rowsHtml=rows.map(r=>{
+    const sub=r.b<=2
+      ?`<span style="color:var(--red)">${r.k}×0=0 ⚠️</span>`
+      :`<span style="color:var(--sub)">${r.k}×${r.gb}=${r.k*r.gb}</span>`;
+    return`<div class="fnat">
+      <div class="fnat-l">
+        <div class="fnat-name">${r.n}</div>
+        <div class="fnat-sub">${sub}</div>
+      </div>
+      <div class="fnat-r">
+        <div class="fnat-b" style="color:${r.b<=2?'var(--red)':r.col}">${r.b}</div>
+        <div class="fnat-l2" style="color:${r.col}">${r.lbl}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const warnHtml=warns.length?`<div class="warn-block">
+    <div class="warn-title">🚨 Bu fanlar GPA ga ta'sir qilmadi:</div>
+    ${warns.map(w=>`<div class="warn-row">· ${w.n} — baho ${w.b} → 0 (${w.k} kredit × 0)</div>`).join('')}
+    <div class="warn-note">Qayta topshirish tavsiya etiladi!</div>
+  </div>`:'';
+
+  document.getElementById('natijaCont').innerHTML=`
+    <div class="result-hero">
+      <div class="rh-bg" style="background:linear-gradient(135deg,${cfg.g1},${cfg.g2})"></div>
+      <div class="rh-inner">
+        <div class="rh-ring" style="border-color:${cfg.gc}40">
+          <div class="rh-ring-n">${gpa.toFixed(1)}</div>
+        </div>
+        <div class="rh-gpa">${gpa.toFixed(2)}</div>
+        <div class="rh-lbl">${cfg.lbl}</div>
+        <div class="rh-sub">${kNom} · ${sumK} kredit</div>
+      </div>
+    </div>
+    <div class="status ${cfg.sc}">${cfg.st(gpa)}</div>
+    ${warnHtml}
+    <div class="card">
+      <div class="card-label">Hisob-kitob</div>
+      <div class="formula-badge">🔢 ${sumKB} ÷ ${sumK} = ${gpa.toFixed(2)}</div>
+      ${rowsHtml}
+    </div>
+    <div class="tip">💡 ${cfg.tip}</div>`;
+}
+
+function getGpaCfg(gpa){
+  if(gpa>=4.5) return{
+    g1:'#084433',g2:'#006e52',gc:'#00bfa5',
+    lbl:LANG==='ru'?'Отлично 🏆':LANG==='en'?'Excellent 🏆':"A'lo 🏆",
+    tip:LANG==='ru'?'Вы заслуживаете президентской стипендии!':LANG==='en'?'You qualify for the Presidential scholarship!':'Prezident stipendiyasiga munosibsiz!',
+    sc:'st-ok',
+    st:g=>LANG==='ru'?`🎉 GPA ${g.toFixed(2)} — Переход подтверждён! Отлично!`:LANG==='en'?`🎉 GPA ${g.toFixed(2)} — Year progression confirmed! Excellent!`:`🎉 GPA ${g.toFixed(2)} — Keyingi kursga o'tish tasdiqlandi! Zo'r!`
+  };
+  if(gpa>=3.5) return{
+    g1:'#0f2460',g2:'#1d40b0',gc:'#4e7cff',
+    lbl:LANG==='ru'?'Хорошо 👍':LANG==='en'?'Good 👍':'Yaxshi 👍',
+    tip:LANG==='ru'?'Продолжайте — до отличного совсем немного!':LANG==='en'?'Keep going — excellent is within reach!':"A'loga ko'tarilish uchun davom eting!",
+    sc:'st-ok',
+    st:g=>LANG==='ru'?`✅ GPA ${g.toFixed(2)} — Переход подтверждён!`:LANG==='en'?`✅ GPA ${g.toFixed(2)} — Year progression confirmed!`:`✅ GPA ${g.toFixed(2)} — Keyingi kursga o'tish tasdiqlandi!`
+  };
+  if(gpa>=2.6) return{
+    g1:'#5c3200',g2:'#a05800',gc:'#f59f00',
+    lbl:LANG==='ru'?'Удовлетворительно ⚡':LANG==='en'?'Satisfactory ⚡':'Qoniqarli ⚡',
+    tip:LANG==='ru'?'Старайтесь повысить оценки!':LANG==='en'?'Try to improve your grades!':'Bahoingizni oshirishga harakat qiling!',
+    sc:'st-ok',
+    st:g=>LANG==='ru'?`✅ GPA ${g.toFixed(2)} — Возможен переход на следующий курс.`:LANG==='en'?`✅ GPA ${g.toFixed(2)} — Eligible to progress to next year.`:`✅ GPA ${g.toFixed(2)} — Keyingi kursga o'tish imkoniyati bor.`
+  };
+  return{
+    g1:'#5a0000',g2:'#960000',gc:'#ff6b6b',
+    lbl:LANG==='ru'?'Неудовлетворительно ⚠️':LANG==='en'?'Unsatisfactory ⚠️':'Qoniqarsiz ⚠️',
+    tip:LANG==='ru'?'Поговорите с преподавателями и пересдайте предметы!':LANG==='en'?'Talk to your instructors and retake the courses!':"O'qituvchilar bilan gaplashing va fanlarni qayta topshiring!",
+    sc:'st-fail',
+    st:g=>LANG==='ru'?`❌ GPA ${g.toFixed(2)} — Ниже 2.6. Минимум 2.6!`:LANG==='en'?`❌ GPA ${g.toFixed(2)} — Below 2.6. Minimum 2.6 required!`:`❌ GPA ${g.toFixed(2)} — 2.6 dan past. Kamida 2.6 kerak!`
+  };
+}
+
+/* ── BOSHQA FANLAR ──────────────────── */
+let bqC=0;
+function boshqaFanlar(){
+  bqC=0;
+  document.getElementById('boshqaRows').innerHTML='';
+  document.getElementById('boshqaXato').style.display='none';
+  boshqaQosh();
+  show('s5'); setStep(1); window.scrollTo(0,0);
+}
+function boshqaQosh(){
+  const id=bqC++;
+  const d=document.createElement('div');
+  d.id='bqr'+id; d.className='bf-row';
+  const lbl1=LANG==='ru'?'КРЕДИТ':LANG==='en'?'CREDITS':'KREDIT';
+  const lbl2=LANG==='ru'?'ОЦЕНКА (1–5)':LANG==='en'?'GRADE (1–5)':'BAHO (1–5)';
+  d.innerHTML=`
+    <div class="bf-f">
+      <div class="bf-lbl">${lbl1}</div>
+      <input type="number" id="bkr${id}" min="1" max="16"
+        placeholder="6" class="bf-inp">
+    </div>
+    <div class="bf-f">
+      <div class="bf-lbl">${lbl2}</div>
+      <input type="number" id="bbh${id}" min="1" max="5"
+        placeholder="5" class="bf-inp">
+    </div>
+    <button class="bf-del" onclick="bqDel(${id})">✕</button>`;
+  document.getElementById('boshqaRows').appendChild(d);
+}
+function bqDel(id){
+  const e=document.getElementById('bqr'+id);
+  if(e) e.remove();
+}
+function boshqaHisoblash(){
+  const xEl=document.getElementById('boshqaXato');
+  xEl.style.display='none';
+  const rows=document.getElementById('boshqaRows').children;
+  if(!rows.length){
+    xEl.textContent=t.errMin1;
+    xEl.style.display='block'; return;
+  }
+  let sumKB=0, sumK=0, nat=[];
+  for(let i=0;i<rows.length;i++){
+    const r=rows[i];
+    const ki=r.querySelector('input[id^="bkr"]');
+    const bi=r.querySelector('input[id^="bbh"]');
+    if(!ki||!bi) continue;
+    const kr=parseFloat(ki.value), bh=parseInt(bi.value);
+    if(!kr||kr<1||kr>16){
+      xEl.textContent=t.errCredit;
+      xEl.style.display='block'; return;
+    }
+    if(!bh||bh<1||bh>5){
+      xEl.textContent=t.errGrade;
+      xEl.style.display='block'; return;
+    }
+    const gb=bh<=2?0:bh;
+    const lbl=bh===5?"A'lo 🟢":bh===4?"Yaxshi 🔵":bh===3?"Qoniqarli 🟡":"Qayta topshirish 🔴";
+    sumK+=kr; sumKB+=kr*gb;
+    nat.push({n:t.subjectN(i+1),k:kr,b:bh,gb,lbl});
+  }
+  if(!sumK){
+    xEl.textContent=t.errFill;
+    xEl.style.display='block'; return;
+  }
+  const gpa=sumKB/sumK;
+  const cfg=getGpaCfg(gpa);
+  const fanRows=nat.map(f=>`
+    <div class="fnat">
+      <div class="fnat-l">
+        <div class="fnat-name">${f.n}</div>
+        <div class="fnat-sub" style="color:var(--sub)">${f.k} kredit</div>
+      </div>
+      <div class="fnat-r">
+        <div class="fnat-b" style="color:${f.b<=2?'var(--red)':'var(--text)'}">${f.b}</div>
+        <div class="fnat-l2">${f.lbl}</div>
+      </div>
+    </div>`).join('');
+
+  document.getElementById('boshqaNatijaCont').innerHTML=`
+    <div class="result-hero">
+      <div class="rh-bg" style="background:linear-gradient(135deg,${cfg.g1},${cfg.g2})"></div>
+      <div class="rh-inner">
+        <div class="rh-ring" style="border-color:${cfg.gc}40">
+          <div class="rh-ring-n">${gpa.toFixed(1)}</div>
+        </div>
+        <div class="rh-gpa">${gpa.toFixed(2)}</div>
+        <div class="rh-lbl">${cfg.lbl}</div>
+        <div class="rh-sub">Jami kredit: ${sumK}</div>
+      </div>
+    </div>
+    <div class="status ${cfg.sc}">${cfg.st(gpa)}</div>
+    <div class="card">
+      <div class="card-label">Kiritilgan fanlar</div>
+      ${fanRows}
+    </div>
+    <div class="tip">💡 ${cfg.tip}</div>`;
+  show('s6'); setStep(3); window.scrollTo(0,0);
+}
+window.addEventListener('DOMContentLoaded', applyLang);
+</script>
+</body>
+</html>
