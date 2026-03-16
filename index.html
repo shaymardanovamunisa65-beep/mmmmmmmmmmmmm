@@ -623,6 +623,7 @@ const t=T[LANG];
 // Til asosida HTML ni yangilash
 function applyLang(){
   const t=T[LANG]||T.uz;
+  document.title=LANG==='ru'?'Калькулятор GPA — ТАТУ АКТ':LANG==='en'?'GPA Calculator — TATU ICT':'GPA Kalkulyator — TATU AKT';
   document.getElementById('st1').textContent=t.step1;
   document.getElementById('st2').textContent=t.step2;
   document.getElementById('st3').textContent=t.step3;
