@@ -393,7 +393,7 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-
       TATU · AKT · 5 ballik tizim
     </div>
     <div class="hdr-title" style="text-align:center;">GPA<br><span id='hdr-sub'>Kalkulyator</span></div>
-    <div class="hdr-desc">Σ(Kredit × Baho) ÷ Σ(Kredit)</div>
+    <div class="hdr-desc" id="hdr-formula">Σ(Kredit × Baho) ÷ Σ(Kredit)</div>
   </div>
   <div class="prog">
     <div class="prog-step active" id="st1">① Kurs</div>
@@ -624,6 +624,10 @@ const t=T[LANG];
 function applyLang(){
   const t=T[LANG]||T.uz;
   document.title=LANG==='ru'?'Калькулятор GPA — ТАТУ АКТ':LANG==='en'?'GPA Calculator — TATU ICT':'GPA Kalkulyator — TATU AKT';
+  const fEl=document.getElementById('hdr-formula');
+  if(fEl) fEl.textContent=LANG==='ru'?'Σ(Кредит × Оценка) ÷ Σ(Кредит)':LANG==='en'?'Σ(Credits × Grade) ÷ Σ(Credits)':'Σ(Kredit × Baho) ÷ Σ(Kredit)';
+  const badge=document.querySelector('.hdr-badge');
+  if(badge) badge.textContent=LANG==='ru'?'ТАТУ · АКТ · 5-балльная система':LANG==='en'?'TATU · ICT · 5-grade system':'TATU · AKT · 5 ballik tizim';
   document.getElementById('st1').textContent=t.step1;
   document.getElementById('st2').textContent=t.step2;
   document.getElementById('st3').textContent=t.step3;
