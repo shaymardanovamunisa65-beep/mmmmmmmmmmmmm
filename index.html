@@ -484,7 +484,7 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-
   <div class="card">
     <div class="card-label" id="otherSubjTitle">Boshqa fanlar</div>
     <div class="bfi">
-      📌 Fan nomisiz — faqat <b>kredit</b> va <b>baho</b> kiriting.<br id="otherInfoEl">
+      <span id="otherInfoEl">📌 Fan nomisiz — faqat <b>kredit</b> va <b>baho</b> kiriting.</span><br>
       <span id="gradeScaleEl">🟢 <b>5</b> A'lo &nbsp;·&nbsp; 🔵 <b>4</b> Yaxshi &nbsp;·&nbsp; 🟡 <b>3</b> Qoniqarli &nbsp;·&nbsp; 🔴 <b>2/1</b> → 0</span>
     </div>
     <div id="boshqaRows"></div>
@@ -641,6 +641,7 @@ function applyLang(){
   if(el('backBtn1')) el('backBtn1').textContent=t.back;
   if(el('recalcBtn1')) el('recalcBtn1').textContent=t.recalc;
   if(el('otherSubjTitle')) el('otherSubjTitle').textContent=t.otherSubjects;
+  if(el('otherInfoEl')) el('otherInfoEl').innerHTML=t.otherInfo;
   if(el('gradeScaleEl')) el('gradeScaleEl').innerHTML=t.gradeScale;
   if(el('addSubjBtn')) el('addSubjBtn').textContent=t.addSubject;
   if(el('calcBtn2')) el('calcBtn2').textContent=t.calculate;
