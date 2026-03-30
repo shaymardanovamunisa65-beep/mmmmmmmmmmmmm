@@ -390,10 +390,10 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-
   <div class="hdr-inner">
     <div class="hdr-pill">
       <span class="hdr-pill-dot"></span>
-      TATU · AKT · 5 ballik tizim
+      TATU · <span id="hdrPillTxt">AKT · 5 ballik tizim</span>
     </div>
     <div class="hdr-title" style="text-align:center;">GPA<br><span id='hdr-sub'>Kalkulyator</span></div>
-    <div class="hdr-desc" id="hdr-formula">Σ(Kredit × Baho) ÷ Σ(Kredit)</div>
+    <div class="hdr-desc">Σ(Kredit × Baho) ÷ Σ(Kredit)</div>
   </div>
   <div class="prog">
     <div class="prog-step active" id="st1">① Kurs</div>
@@ -623,15 +623,11 @@ const t=T[LANG];
 // Til asosida HTML ni yangilash
 function applyLang(){
   const t=T[LANG]||T.uz;
-  document.title=LANG==='ru'?'Калькулятор GPA — ТАТУ АКТ':LANG==='en'?'GPA Calculator — TATU ICT':'GPA Kalkulyator — TATU AKT';
-  const fEl=document.getElementById('hdr-formula');
-  if(fEl) fEl.textContent=LANG==='ru'?'Σ(Кредит × Оценка) ÷ Σ(Кредит)':LANG==='en'?'Σ(Credits × Grade) ÷ Σ(Credits)':'Σ(Kredit × Baho) ÷ Σ(Kredit)';
-  const badge=document.querySelector('.hdr-badge');
-  if(badge) badge.textContent=LANG==='ru'?'ТАТУ · АКТ · 5-балльная система':LANG==='en'?'TATU · ICT · 5-grade system':'TATU · AKT · 5 ballik tizim';
   document.getElementById('st1').textContent=t.step1;
   document.getElementById('st2').textContent=t.step2;
   document.getElementById('st3').textContent=t.step3;
   if(document.getElementById('hdr-sub')) document.getElementById('hdr-sub').textContent=LANG==='ru'?'Калькулятор':LANG==='en'?'Calculator':'Kalkulyator';
+  if(document.getElementById('hdrPillTxt')) document.getElementById('hdrPillTxt').textContent=LANG==='ru'?'ИКТ · 5-балльная система':LANG==='en'?'ICT · 5-point grading':'AKT · 5 ballik tizim';
   const el=id=>document.getElementById(id);
   if(el('selectCourseTitle')) el('selectCourseTitle').textContent=t.selectCourse;
   if(el('courseDescEl')) el('courseDescEl').textContent=t.courseDesc;
@@ -846,6 +842,7 @@ function hisoblash(){
   });
 
   const gpa=sumKB/sumK;
+  const kNomL=DATA[curK][LANG]?.nom||DATA[curK].uz?.nom||curK;
   renderNatija(gpa, sumK, sumKB, rows, warns, kNomL);
   show('s4'); setStep(3); window.scrollTo(0,0);
 }
@@ -868,10 +865,17 @@ function renderNatija(gpa, sumK, sumKB, rows, warns, kNom){
     </div>`;
   }).join('');
 
+  const warnTitle=LANG==='ru'?'🚨 Эти дисциплины не влияют на GPA:':LANG==='en'?'🚨 These courses did not affect GPA:':'🚨 Bu fanlar GPA ga ta\'sir qilmadi:';
+  const warnGrade=LANG==='ru'?'оценка':LANG==='en'?'grade':'baho';
+  const warnCredit=LANG==='ru'?'кредит':LANG==='en'?'credit':'kredit';
+  const warnNote=LANG==='ru'?'Рекомендуется пересдать!':LANG==='en'?'Retaking is recommended!':'Qayta topshirish tavsiya etiladi!';
+  const calcLabel=LANG==='ru'?'Расчёт':LANG==='en'?'Calculation':'Hisob-kitob';
+  const creditWord=LANG==='ru'?'кредит':LANG==='en'?'credits':'kredit';
+
   const warnHtml=warns.length?`<div class="warn-block">
-    <div class="warn-title">🚨 Bu fanlar GPA ga ta'sir qilmadi:</div>
-    ${warns.map(w=>`<div class="warn-row">· ${w.n} — baho ${w.b} → 0 (${w.k} kredit × 0)</div>`).join('')}
-    <div class="warn-note">Qayta topshirish tavsiya etiladi!</div>
+    <div class="warn-title">${warnTitle}</div>
+    ${warns.map(w=>`<div class="warn-row">· ${w.n} — ${warnGrade} ${w.b} → 0 (${w.k} ${warnCredit} × 0)</div>`).join('')}
+    <div class="warn-note">${warnNote}</div>
   </div>`:'';
 
   document.getElementById('natijaCont').innerHTML=`
@@ -883,13 +887,13 @@ function renderNatija(gpa, sumK, sumKB, rows, warns, kNom){
         </div>
         <div class="rh-gpa">${gpa.toFixed(2)}</div>
         <div class="rh-lbl">${cfg.lbl}</div>
-        <div class="rh-sub">${kNom} · ${sumK} kredit</div>
+        <div class="rh-sub">${kNom} · ${sumK} ${creditWord}</div>
       </div>
     </div>
     <div class="status ${cfg.sc}">${cfg.st(gpa)}</div>
     ${warnHtml}
     <div class="card">
-      <div class="card-label">Hisob-kitob</div>
+      <div class="card-label">${calcLabel}</div>
       <div class="formula-badge">🔢 ${sumKB} ÷ ${sumK} = ${gpa.toFixed(2)}</div>
       ${rowsHtml}
     </div>
@@ -984,7 +988,10 @@ function boshqaHisoblash(){
       xEl.style.display='block'; return;
     }
     const gb=bh<=2?0:bh;
-    const lbl=bh===5?"A'lo 🟢":bh===4?"Yaxshi 🔵":bh===3?"Qoniqarli 🟡":"Qayta topshirish 🔴";
+    const lbl=bh===5?(LANG==='ru'?'Отлично 🟢':LANG==='en'?'Excellent 🟢':"A'lo 🟢"):
+             bh===4?(LANG==='ru'?'Хорошо 🔵':LANG==='en'?'Good 🔵':'Yaxshi 🔵'):
+             bh===3?(LANG==='ru'?'Удовл. 🟡':LANG==='en'?'Satisfactory 🟡':'Qoniqarli 🟡'):
+             (LANG==='ru'?'Пересдача 🔴':LANG==='en'?'Retake 🔴':'Qayta topshirish 🔴');
     sumK+=kr; sumKB+=kr*gb;
     nat.push({n:t.subjectN(i+1),k:kr,b:bh,gb,lbl});
   }
@@ -994,11 +1001,14 @@ function boshqaHisoblash(){
   }
   const gpa=sumKB/sumK;
   const cfg=getGpaCfg(gpa);
+  const bqCreditWord=LANG==='ru'?'Всего кредитов':LANG==='en'?'Total credits':'Jami kredit';
+  const bqSubjLabel=LANG==='ru'?'Введённые дисциплины':LANG==='en'?'Entered courses':'Kiritilgan fanlar';
+  const bqCreditSub=LANG==='ru'?'кредит':LANG==='en'?'credits':'kredit';
   const fanRows=nat.map(f=>`
     <div class="fnat">
       <div class="fnat-l">
         <div class="fnat-name">${f.n}</div>
-        <div class="fnat-sub" style="color:var(--sub)">${f.k} kredit</div>
+        <div class="fnat-sub" style="color:var(--sub)">${f.k} ${bqCreditSub}</div>
       </div>
       <div class="fnat-r">
         <div class="fnat-b" style="color:${f.b<=2?'var(--red)':'var(--text)'}">${f.b}</div>
@@ -1015,12 +1025,12 @@ function boshqaHisoblash(){
         </div>
         <div class="rh-gpa">${gpa.toFixed(2)}</div>
         <div class="rh-lbl">${cfg.lbl}</div>
-        <div class="rh-sub">Jami kredit: ${sumK}</div>
+        <div class="rh-sub">${bqCreditWord}: ${sumK}</div>
       </div>
     </div>
     <div class="status ${cfg.sc}">${cfg.st(gpa)}</div>
     <div class="card">
-      <div class="card-label">Kiritilgan fanlar</div>
+      <div class="card-label">${bqSubjLabel}</div>
       ${fanRows}
     </div>
     <div class="tip">💡 ${cfg.tip}</div>`;
