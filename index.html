@@ -110,7 +110,7 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-
 
 
 
-/* Baho shkala */
+
 .shkala{display:flex;gap:6px;margin-bottom:14px;}
 .sh{
   flex:1;border-radius:14px;
@@ -125,7 +125,7 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-
 .sh-n{font-size:18px;font-weight:900;color:var(--text);}
 .sh-l{font-size:8px;font-weight:700;color:var(--sub);}
 
-/* Kurs kartalar */
+
 .kgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
 .kcard{
   background:var(--surface);
@@ -486,13 +486,13 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-
 <script>
 if(window.Telegram&&Telegram.WebApp)Telegram.WebApp.ready();
 
-// Til tizimi
+
 const LANG = (()=>{
-  // Birinchi URL parametrdan olish (bot tilidan)
+  
   const urlParams=new URLSearchParams(window.location.search);
   const urlLang=urlParams.get('lang');
   if(urlLang==='ru'||urlLang==='en'||urlLang==='uz') return urlLang;
-  // Keyin Telegram WebApp tilidan
+ 
   try{
     const ul=Telegram.WebApp.initDataUnsafe?.user?.language_code||'uz';
     if(ul==='ru') return 'ru';
@@ -598,7 +598,7 @@ const T={
 };
 const t=T[LANG];
 
-// Til asosida HTML ni yangilash
+
 function applyLang(){
   const t=T[LANG]||T.uz;
   document.getElementById('st1').textContent=t.step1;
@@ -626,7 +626,7 @@ function applyLang(){
   if(el('backBtn2')) el('backBtn2').textContent=t.back;
   if(el('recalcBtn2')) el('recalcBtn2').textContent=t.recalc;
   if(el('homeBtn2')) el('homeBtn2').textContent=t.home;
-  // Kurs sub-textlarini tarjima
+
   const subMap={
     k1sub:LANG==='ru'?'14 дисц. · 64 кр':LANG==='en'?'14 courses · 64 cr':'14 fan · 64 kr',
     k2sub:LANG==='ru'?'10 дисц. · 60 кр':LANG==='en'?'10 courses · 60 cr':'10 fan · 60 kr',
