@@ -7,9 +7,7 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-/* ════════════════════════════════════════
-   TOKENS
-════════════════════════════════════════ */
+
 :root{
   --navy:#0f2460;
   --blue:#1d40b0;
@@ -30,9 +28,7 @@
 html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased;}
 .app{max-width:430px;margin:0 auto;padding-bottom:48px;}
 
-/* ════════════════════════════════════════
-   HEADER
-════════════════════════════════════════ */
+
 .hdr{
   background:var(--navy);
   padding:24px 20px 0;
@@ -72,7 +68,7 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-
   margin-bottom:20px;font-weight:500;letter-spacing:.2px;
 }
 
-/* PROGRESS NAV */
+
 .prog{
   display:flex;align-items:stretch;
   margin:0 -20px;padding:0 20px;
@@ -90,18 +86,14 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-
 .prog-step.active{color:var(--teal);border-bottom-color:var(--teal);}
 .prog-step.done{color:rgba(255,255,255,.5);}
 
-/* ════════════════════════════════════════
-   SCREENS
-════════════════════════════════════════ */
+
 .wrap{padding:16px;}
 .screen{display:none;}
 .screen.on{display:block;animation:up .2s ease;}
 #s5.on{display:flex;flex-direction:column;}
 @keyframes up{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
 
-/* ════════════════════════════════════════
-   CARD
-════════════════════════════════════════ */
+
 .card{
   background:var(--surface);
   border-radius:var(--radius);
@@ -116,9 +108,7 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-
   text-transform:uppercase;margin-bottom:12px;
 }
 
-/* ════════════════════════════════════════
-   S1 — HOME
-════════════════════════════════════════ */
+
 
 /* Baho shkala */
 .shkala{display:flex;gap:6px;margin-bottom:14px;}
@@ -161,7 +151,7 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-
   padding:3px 7px;
 }
 
-/* Boshqa fanlar */
+
 .bq{
   display:flex;align-items:center;gap:12px;
   background:linear-gradient(135deg,#f5f7ff,#edf0ff);
@@ -182,9 +172,7 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-
 .bq-s{font-size:11px;color:var(--sub);margin-top:2px;}
 .bq-arr{margin-left:auto;font-size:22px;color:#c0ccec;flex-shrink:0;}
 
-/* ════════════════════════════════════════
-   S3 — FAN BAHOLASH
-════════════════════════════════════════ */
+
 .sem-tag{
   display:inline-flex;align-items:center;gap:6px;
   background:linear-gradient(135deg,#edf0ff,#e4e9ff);
@@ -228,9 +216,7 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-
 .blbl-row{display:flex;gap:5px;margin-top:3px;}
 .blbl{flex:1;text-align:center;font-size:8px;font-weight:700;color:var(--sub);}
 
-/* ════════════════════════════════════════
-   BUTTONS
-════════════════════════════════════════ */
+
 .btn{
   width:100%;padding:15px;border:none;
   border-radius:var(--radius);
@@ -253,9 +239,7 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-
   border:1.5px solid var(--border);
 }
 
-/* ════════════════════════════════════════
-   XATO
-════════════════════════════════════════ */
+   
 .xato{
   display:none;
   background:#fff0f0;border:1px solid #fcc;
@@ -264,9 +248,7 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-
   margin-bottom:10px;
 }
 
-/* ════════════════════════════════════════
-   S4 / S6 — NATIJA
-════════════════════════════════════════ */
+
 .result-hero{
   border-radius:24px;padding:32px 20px 28px;
   text-align:center;margin-bottom:12px;
@@ -287,7 +269,7 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-
 .rh-lbl{font-size:16px;font-weight:800;color:rgba(255,255,255,.9);margin-top:8px;}
 .rh-sub{font-size:11.5px;color:rgba(255,255,255,.55);margin-top:5px;font-weight:500;}
 
-/* Status banner */
+
 .status{
   border-radius:16px;padding:14px 16px;
   margin-bottom:12px;font-size:13px;font-weight:700;line-height:1.6;
@@ -297,7 +279,7 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-
 .st-fail{background:linear-gradient(135deg,#fff0f0,#ffd8d8);
   border:1.5px solid #f5a0a0;color:#7a0000;}
 
-/* Hisob jadval */
+
 .formula-badge{
   display:inline-flex;align-items:center;gap:6px;
   background:#f0f3ff;border:1px solid #d8dff8;
@@ -332,9 +314,7 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-
   color:var(--navy);text-align:center;
 }
 
-/* ════════════════════════════════════════
-   S5 — BOSHQA FANLAR
-════════════════════════════════════════ */
+
 .bfi{
   background:linear-gradient(135deg,#f0f8ff,#e8f3fd);
   border:1px solid #c0d8f0;border-radius:14px;
@@ -374,16 +354,14 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-
 }
 .add-btn:active{background:#f0f4ff;}
 
-/* ════════════════════════════════════════
-   DIVIDER
-════════════════════════════════════════ */
+
 .divider{height:1px;background:var(--border);margin:4px 0 12px;}
 </style>
 </head>
 <body>
 <div class="app">
 
-<!-- ── HEADER ───────────────────────────────────────── -->
+
 <div class="hdr">
   <div class="hdr-blob hb1"></div>
   <div class="hdr-blob hb2"></div>
@@ -402,13 +380,13 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-
   </div>
 </div>
 
-<!-- ── WRAP ─────────────────────────────────────────── -->
+
 <div class="wrap">
 
-<!-- ════════════════ S1: BOSH SAHIFA ════════════════ -->
+
 <div class="screen on" id="s1">
 
-  <!-- Baho shkala -->
+ 
   <div class="shkala" style="margin-top:4px;">
     <div class="sh sh-5"><span class="sh-n">5</span><span class="sh-l" id="g5lbl">A'lo</span></div>
     <div class="sh sh-4"><span class="sh-n">4</span><span class="sh-l" id="g4lbl">Yaxshi</span></div>
@@ -417,7 +395,7 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-
     <div class="sh sh-1b"><span class="sh-n">1</span><span class="sh-l">→ 0</span></div>
   </div>
 
-  <!-- Kurs kartalar -->
+ 
   <div class="card" style="padding:16px;">
     <div style="margin-bottom:14px;">
       <div style="font-size:15px;font-weight:800;color:var(--navy);" id="selectCourseTitle">Kursni tanlang</div>
@@ -447,7 +425,7 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-
     </div>
   </div>
 
-  <!-- Boshqa fanlar -->
+ 
   <button class="bq" onclick="boshqaFanlar()">
     <div class="bq-ico">＋</div>
     <div>
@@ -459,10 +437,10 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-
 
 </div>
 
-<!-- ════════════════ S2: PLACEHOLDER ════════════════ -->
+
 <div class="screen" id="s2"></div>
 
-<!-- ════════════════ S3: FANLAR ════════════════ -->
+
 <div class="screen" id="s3">
   <div class="card">
     <div class="card-label" id="s3title">Fanlar</div>
@@ -473,13 +451,13 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-
   <button class="btn btn-ghost" onclick="goS1()" id="backBtn1">← Orqaga</button>
 </div>
 
-<!-- ════════════════ S4: NATIJA ════════════════ -->
+
 <div class="screen" id="s4">
   <div id="natijaCont"></div>
   <button class="btn btn-navy" onclick="goS1()" id="recalcBtn1">🔄 Qayta hisoblash</button>
 </div>
 
-<!-- ════════════════ S5: BOSHQA FANLAR ════════════════ -->
+
 <div class="screen" id="s5" style="min-height:calc(100vh - 160px);">
   <div class="card">
     <div class="card-label" id="otherSubjTitle">Boshqa fanlar</div>
@@ -495,7 +473,7 @@ html,body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;-
   <button class="btn btn-ghost" onclick="goS1()" id="backBtn2">← Orqaga</button>
 </div>
 
-<!-- ════════════════ S6: BOSHQA NATIJA ════════════════ -->
+
 <div class="screen" id="s6">
   <div id="boshqaNatijaCont"></div>
   <button class="btn btn-navy" onclick="boshqaFanlar()" id="recalcBtn2">🔄 Qayta hisoblash</button>
@@ -658,7 +636,7 @@ function applyLang(){
   Object.entries(subMap).forEach(([id,txt])=>{if(el(id))el(id).textContent=txt;});
 }
 
-/* ── DATA ───────────────────────────── */
+
 const DATA={
   k1:{
     uz:{nom:'1-kurs'},ru:{nom:'1-й курс'},en:{nom:'Year 1'},
@@ -741,10 +719,10 @@ const DATA={
   }}
 };
 
-/* ── STATE ──────────────────────────── */
+
 let sel={}, curK=null;
 
-/* ── NAVIGATION ─────────────────────── */
+
 function show(id){
   document.querySelectorAll('.screen').forEach(s=>{
     s.className='screen'+(s.id===id?' on':'');
@@ -759,7 +737,7 @@ function setStep(n){
 }
 function goS1(){show('s1');setStep(1);curK=null;sel={};}
 
-/* ── KURS ───────────────────────────── */
+
 function kursT(kid){
   curK=kid; sel={};
   const k=DATA[kid], ids=Object.keys(k.s);
@@ -816,7 +794,7 @@ function pickBall(i, v){
   document.getElementById('xatoMsg').style.display='none';
 }
 
-/* ── HISOBLASH ──────────────────────── */
+
 function hisoblash(){
   const k=DATA[curK], ids=Object.keys(k.s);
   const all=[...k.s[ids[0]].f, ...k.s[ids[1]].f];
@@ -932,7 +910,7 @@ function getGpaCfg(gpa){
   };
 }
 
-/* ── BOSHQA FANLAR ──────────────────── */
+
 let bqC=0;
 function boshqaFanlar(){
   bqC=0;
